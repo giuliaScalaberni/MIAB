@@ -7,14 +7,22 @@ package com.mycompany.miab_client;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import static org.apache.commons.io.filefilter.DirectoryFileFilter.DIRECTORY;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -56,16 +64,65 @@ public class MIAB_client {
     }
 }
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         List <File>lista= new ArrayList<>();
         File f= new File("C:\\Users\\istri_000\\Desktop\\stampare.odt") ;
         lista=splitFile(f);
-        System.out.println(lista.size());
-        packet p1= new packet();
-        p1.setCommand('u');
-        String buffer=f.getName()+", "+"md5, "+lista.size();
-        p1.setBuffer(buffer);
-    
+        String tot="";
+        
+        packet upload= new packet();
+        upload.setCommand('U');
+        String buffer=f.getName()+","+lista.size();
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(buffer.getBytes());
+	byte[] digest = md.digest();
+        buffer+=","+digest;
+        upload.setBuffer(buffer);
+        upload.setLen_buffer(buffer);
+        upload.setChecksum(upload);
+        JSONArray o=upload.getContent();
+      
+        List<File> file=new ArrayList<>();
+        System.out.println("UPLOAD "+o.toJSONString());
+        for (int i=0; i<lista.size();i++){
+            packet p=new packet ();
+            p.setCommand('S');
+            p.setOpcode(i+1);
+            p.setBuffer(lista.get(i));
+            p.setLen_buffer(p.getBuffer());
+            p.setChecksum(p);
+            JSONArray j=p.getContent();
+            tot+=p.getBuffer();
+          
+        System.out.println("SEND"+i+j.toJSONString());
+        
+        file.add(new File(p.getBuffer()));
+        
+        }
+        System.out.println(tot);
+        try {
+
+        // Create file
+        FileWriter fileStream = new FileWriter("ciao.odt");
+        BufferedWriter writer = new BufferedWriter(fileStream);
+
+        writer.write(tot);
+
+        // Close writer
+        writer.close();
+
+        // Handle exceptions
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+        packet end= new packet();
+        end.setCommand('E');
+        end.setOpcode(1);
+        end.setChecksum(end);
+        JSONArray e=end.getContent();
+        System.out.println("End "+e.toJSONString());
+       
+       
    
 }
 }

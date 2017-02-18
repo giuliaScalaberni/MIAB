@@ -5,13 +5,15 @@
  */
 package com.mycompany.miab_client;
 
-import java.io.BufferedInputStream;
+import java.io.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -39,12 +41,45 @@ public class packet implements packetInt{
         this.buffer = buffer;
         this.checksum = checksum;
     }
+
+    @Override
+    public void setBuffer(File buffer) {
+        
+    String line = "";
+
+    try {
+        BufferedReader br = new BufferedReader(new FileReader(buffer));
+
+        while (br.readLine() != null) {
+          line+=br.readLine();
+
+          if (br == null) {
+              
+              // close reader when all data is read
+              br.close();
+          }
+        }}
+    catch (FileNotFoundException e) {
+        e.getMessage();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    this.buffer=line;
+}
+
+    public String getBuffer() {
+        return buffer;
+    }
     
 
     public void setBuffer(String buffer) {
         //if (buffer.getBytes().length<=2000)
             this.buffer = buffer;
+            
         
+    }
+    public void setLen_buffer(String buffer){
+        this.len_buffer=(short)this.buffer.getBytes().length;
     }
 
     public void setCommand(char command) {
@@ -65,16 +100,21 @@ public class packet implements packetInt{
         this.checksum = (byte)chksm;
     }
 
-    public void setLen_buffer(String buffer) {
-        this.len_buffer=(short)this.buffer.getBytes().length;
-    }
-
+    
     public void setOpcode(int opcode) {
         this.opcode = opcode;
     }
     
-    public void getContent(packet p){
-    
+    public JSONArray getContent(){
+        //scrittura dati nel JSON
+            JSONArray arr= new JSONArray ();
+            
+            arr.add(this.command);
+            arr.add(this.opcode);
+            arr.add(this.len_buffer);
+            arr.add(this.buffer);
+            arr.add(this.checksum);
+            return arr;
     }
     }
      

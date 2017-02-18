@@ -5,6 +5,10 @@
  */
 package com.mycompany.miab_client;
 
+import java.io.File;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 /**
  *
  * @author Giulia Scalaberni
@@ -14,6 +18,8 @@ public interface packetInt {
     public void setOpcode(int opcode);
     public void setLen_buffer(String buffer);
     public void setBuffer(String buffer);
+    public String getBuffer();
+    public void setBuffer(File buffer);
     public void setChecksum(packet p);
-    public void getContent(packet p);
+    public JSONArray getContent();
 }
