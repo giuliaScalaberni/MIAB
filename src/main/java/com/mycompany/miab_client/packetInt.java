@@ -15,4 +15,5 @@ public interface packetInt {
     public void setLen_buffer(String buffer);
     public void setBuffer(String buffer);
     public void setChecksum(packet p);
+    public void getContent(packet p);
 }

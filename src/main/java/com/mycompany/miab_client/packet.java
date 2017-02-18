@@ -5,6 +5,14 @@
  */
 package com.mycompany.miab_client;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Giulia Scalaberni
@@ -17,6 +25,11 @@ public class packet implements packetInt{
     private byte checksum;
 
     public packet() {
+        this.command=0;
+        this.buffer="";
+        this.checksum=0;
+        this.len_buffer=0;
+        this.opcode=0;
     }
 
     public packet(char command, int opcode,  String buffer, byte checksum) {
@@ -60,9 +73,13 @@ public class packet implements packetInt{
         this.opcode = opcode;
     }
     
+    public void getContent(packet p){
+    
+    }
+    }
      
     
-}
+
  
 
 
