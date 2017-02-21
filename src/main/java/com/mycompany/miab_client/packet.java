@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,77 +21,52 @@ import org.json.simple.JSONObject;
  * @author Giulia Scalaberni
  */
 public class packet implements packetInt{
-    private char command;
-    private int opcode;
-    private short len_buffer;
-    private String buffer;
+    private String command;
+    private String opCode;
+    private int bufferLenght;
+    private byte [] buffer;
     private byte checksum;
 
     public packet() {
-        this.command=0;
-        this.buffer="";
+        this.command="";
+        this.opCode="";
         this.checksum=0;
-        this.len_buffer=0;
-        this.opcode=0;
+        this.bufferLenght=0;
+        this.opCode="";
     }
 
-    public packet(char command, int opcode,  String buffer, byte checksum) {
+    public packet(String command, String opcode,  byte[] buffer, byte checksum) {
         this.command = command;
-        this.opcode = opcode;
-        this.len_buffer=(short)this.buffer.getBytes().length;
+        this.opCode = opcode;
+        this.bufferLenght=buffer.length;
         this.buffer = buffer;
         this.checksum = checksum;
     }
 
-    @Override
-    public void setBuffer(File buffer) {
-        
-    String line = "";
+  
 
-    try {
-        BufferedReader br = new BufferedReader(new FileReader(buffer));
-
-        while (br.readLine() != null) {
-          line+=br.readLine();
-
-          if (br == null) {
-              
-              // close reader when all data is read
-              br.close();
-          }
-        }}
-    catch (FileNotFoundException e) {
-        e.getMessage();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    this.buffer=line;
-}
-
-    public String getBuffer() {
+    public byte[] getBuffer() {
         return buffer;
     }
     
 
-    public void setBuffer(String buffer) {
-        //if (buffer.getBytes().length<=2000)
-            this.buffer = buffer;
-            
-        
+    public void setLen_buffer(byte[] buffer){
+        this.bufferLenght=this.buffer.length;
     }
-    public void setLen_buffer(String buffer){
-        this.len_buffer=(short)this.buffer.getBytes().length;
+    
+    public void setBuffer(byte[] buffer){
+        this.buffer=buffer;
     }
 
-    public void setCommand(char command) {
+    public void setCommand(String command) {
         this.command = command;
     }
 
     public void setChecksum(packet p) {
         String  message="";
         message+=p.command;
-        message+=p.opcode;
-        message+=p.len_buffer;
+        message+=p.opCode;
+        message+=p.bufferLenght;
         message+=p.buffer;
         int chksm=0;
         for ( int i=0 ; i < message.length()-1 ; i++ ) 
@@ -101,20 +77,22 @@ public class packet implements packetInt{
     }
 
     
-    public void setOpcode(int opcode) {
-        this.opcode = opcode;
+    public void setOpcode(String opcode) {
+        this.opCode = opcode;
     }
     
-    public JSONArray getContent(){
+    public JSONObject getContent(){
         //scrittura dati nel JSON
-            JSONArray arr= new JSONArray ();
+            JSONObject obj= new JSONObject ();
+   
+            obj.put("command",this.command);
+            obj.put("opCode",this.opCode);
             
-            arr.add(this.command);
-            arr.add(this.opcode);
-            arr.add(this.len_buffer);
-            arr.add(this.buffer);
-            arr.add(this.checksum);
-            return arr;
+            obj.put("bufferLenght",String.valueOf(this.bufferLenght));
+            
+            obj.put("buffer",Base64.getEncoder().encodeToString(this.buffer));
+            obj.put("checksum",this.checksum);
+            return obj;
     }
     }
      

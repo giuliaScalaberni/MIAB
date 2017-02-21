@@ -14,12 +14,11 @@ import org.json.simple.JSONObject;
  * @author Giulia Scalaberni
  */
 public interface packetInt {
-    public void setCommand(char command);
-    public void setOpcode(int opcode);
-    public void setLen_buffer(String buffer);
-    public void setBuffer(String buffer);
-    public String getBuffer();
-    public void setBuffer(File buffer);
+    public void setCommand(String command);
+    public void setOpcode(String opcode);
+    public void setLen_buffer(byte[] buffer);
+    public void setBuffer(byte[] buffer);
+    public byte[] getBuffer();
     public void setChecksum(packet p);
-    public JSONArray getContent();
+    public JSONObject getContent();
 }
