@@ -15,14 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import static org.apache.commons.io.filefilter.DirectoryFileFilter.DIRECTORY;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 /**
  *
@@ -108,22 +104,10 @@ public class MIAB_client {
             System.out.println("SEND"+i+b.toJSONString());
           
         }
-        System.out.println(tot);
-        try {
 
-        // Create file
-        FileWriter fileStream = new FileWriter("ciao.odt");
-        BufferedWriter writer = new BufferedWriter(fileStream);
+        mergeFiles(lista, new File ("ciao.odt"));
 
-        writer.write(tot);
 
-        // Close writer
-        writer.close();
-
-        // Handle exceptions
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
         /*packet end= new packet();
         end.setCommand('E');
         end.setOpcode(1);
