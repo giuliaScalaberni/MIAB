@@ -113,7 +113,22 @@ public class MIAB_client {
         }
         
         mergeFiles(listaFinale, new File ("file.odt"));
-        
+        try{
+                for (int i=0;i<lista.size();i++){
+    		File filex = new File(String.valueOf(i));
+    		if(filex.delete()){
+    			System.out.println(filex.getName() + " is deleted!");
+    		}else{
+    			System.out.println("Delete operation is failed.");
+    		}
+                
+                }
+
+    	}catch(Exception e){
+
+    		e.printStackTrace();
+
+    	}
 
         /*packet end= new packet();
         end.setCommand('E');
