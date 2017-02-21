@@ -19,6 +19,7 @@ import java.util.List;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 /**
  *
@@ -86,6 +87,8 @@ public class MIAB_client {
         List<File> file=new ArrayList<>();
         System.out.println("UPLOAD "+o.toJSONString());
         int op;
+        List<File> listaFinale= new ArrayList<>();
+ 
         for (int i=0; i<lista.size();i++){
             packet p=new packet ();
             
@@ -102,11 +105,15 @@ public class MIAB_client {
             JSONObject b=p.getContent();
           
             System.out.println("SEND"+i+b.toJSONString());
-          
+            File f2 = new File(String.valueOf(i));
+            FileOutputStream fo= new FileOutputStream (f2);
+            fo.write(p.getBuffer());
+            fo.close();
+            listaFinale.add(f2);
         }
-
-        mergeFiles(lista, new File ("ciao.odt"));
-
+        
+        mergeFiles(listaFinale, new File ("file.odt"));
+        
 
         /*packet end= new packet();
         end.setCommand('E');
