@@ -21,4 +21,5 @@ public interface packetInt {
     public byte[] getBuffer();
     public void setChecksum(packet p);
     public JSONObject getContent();
+    public JSONObject setUpload(String filename,String x, int nTot);
 }

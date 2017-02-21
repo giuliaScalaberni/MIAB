@@ -10,10 +10,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import org.json.simple.JSONArray;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 
 /**
@@ -42,6 +46,7 @@ public class packet implements packetInt{
         this.buffer = buffer;
         this.checksum = checksum;
     }
+   
 
   
 
@@ -89,8 +94,24 @@ public class packet implements packetInt{
             obj.put("opCode",this.opCode);
             
             obj.put("bufferLenght",String.valueOf(this.bufferLenght));
-            
             obj.put("buffer",Base64.getEncoder().encodeToString(this.buffer));
+            
+            
+            obj.put("checksum",this.checksum);
+            return obj;
+    }
+    
+    public JSONObject setUpload(String filename,String x, int nTot){
+    //scrittura dati nel JSON
+            JSONObject obj= new JSONObject ();
+            obj.put("command","U");
+            obj.put("opCode",nTot);
+            JSONObject buffer= new JSONObject ();
+            buffer.put("filename", filename);
+            buffer.put("md5",x);
+            obj.put("bufferLenght",buffer.size());
+            obj.put("buffer", buffer);
+            this.setChecksum(this);
             obj.put("checksum",this.checksum);
             return obj;
     }

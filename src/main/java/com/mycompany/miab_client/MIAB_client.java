@@ -20,10 +20,10 @@ import java.util.List;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import static org.apache.commons.io.filefilter.DirectoryFileFilter.DIRECTORY;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 /**
  *
  * @author Giulia Scalaberni
@@ -68,36 +68,45 @@ public class MIAB_client {
         List <File>lista= new ArrayList<>();
         File f= new File("C:\\Users\\istri_000\\Desktop\\stampare.odt") ;
         lista=splitFile(f);
-        String tot="";
-        
-        packet upload= new packet();
-        upload.setCommand('U');
-        String buffer=f.getName()+","+lista.size();
+        //md5
         MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(buffer.getBytes());
-	byte[] digest = md.digest();
-        buffer+=","+digest;
-        upload.setBuffer(buffer);
-        upload.setLen_buffer(buffer);
-        upload.setChecksum(upload);
-        JSONArray o=upload.getContent();
+        FileInputStream fis = new FileInputStream(f);
+        byte[] dataBytes = new byte[1024];
+        int nread = 0;
+        while ((nread = fis.read(dataBytes)) != -1) {
+          md.update(dataBytes, 0, nread);
+        };
+        byte[] mdbytes = md.digest();
+        //convert the byte to hex format method 1
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < mdbytes.length; i++) {
+          sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        
+        String tot="";
+        packet upload= new packet();
+        JSONObject o=upload.setUpload(f.getName(), sb.toString(), lista.size());
       
         List<File> file=new ArrayList<>();
         System.out.println("UPLOAD "+o.toJSONString());
+        int op;
         for (int i=0; i<lista.size();i++){
             packet p=new packet ();
-            p.setCommand('S');
-            p.setOpcode(i+1);
-            p.setBuffer(lista.get(i));
+            
+            p.setCommand("S");
+            p.setOpcode(String.valueOf(i+1));
+            //Base64.getEncoder().encodeToString();
+            byte[] bytesArray = new byte[(int) lista.get(i).length()];
+            FileInputStream fis2 = new FileInputStream(lista.get(i));
+            fis2.read(bytesArray); //read file into bytes[]
+            fis2.close();
+            p.setBuffer(bytesArray);
             p.setLen_buffer(p.getBuffer());
             p.setChecksum(p);
-            JSONArray j=p.getContent();
-            tot+=p.getBuffer();
+            JSONObject b=p.getContent();
           
-        System.out.println("SEND"+i+j.toJSONString());
-        
-        file.add(new File(p.getBuffer()));
-        
+            System.out.println("SEND"+i+b.toJSONString());
+          
         }
         System.out.println(tot);
         try {
@@ -115,12 +124,12 @@ public class MIAB_client {
     } catch (Exception e) {
         e.printStackTrace();
     }
-        packet end= new packet();
+        /*packet end= new packet();
         end.setCommand('E');
         end.setOpcode(1);
         end.setChecksum(end);
         JSONArray e=end.getContent();
-        System.out.println("End "+e.toJSONString());
+        System.out.println("End "+e.toJSONString());*/
        
        
    
