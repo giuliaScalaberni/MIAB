@@ -28,7 +28,7 @@ import org.json.simple.JSONObject;
 
 public class MIAB_client {
      public static List<File> splitFile(File f) throws IOException {
-        int partCounter = 1;//I like to name parts from 001, 002, 003, ...
+        int partCounter = 0;//I like to name parts from 001, 002, 003, ...
                             //you can change it to 0 if you want 000, 001, ...
 
         int sizeOfFiles = 1024 * 1024/1000*2;// 2KB
@@ -41,8 +41,7 @@ public class MIAB_client {
             int tmp = 0;
             while ((tmp = bis.read(buffer)) > 0) {
                 //write each chunk of data into separate file with different number in name
-                File newFile = new File(f.getParent(), name + "."
-                        + String.format("%03d", partCounter++));
+                File newFile = new File(f.getParent(), String.valueOf(partCounter++));
                 try (FileOutputStream out = new FileOutputStream(newFile)) {
                     out.write(buffer, 0, tmp);//tmp is chunk size
                     lista.add(newFile);
@@ -63,9 +62,9 @@ public class MIAB_client {
     
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         List <File>lista= new ArrayList<>();
-        File f= new File("C:\\Users\\istri_000\\Desktop\\stampare.odt") ;
+        File f= new File("C:\\Users\\istri_000\\Desktop\\conf2.jpg") ;
         lista=splitFile(f);
-        //md5
+        
         MessageDigest md = MessageDigest.getInstance("MD5");
         FileInputStream fis = new FileInputStream(f);
         byte[] dataBytes = new byte[1024];
@@ -111,8 +110,25 @@ public class MIAB_client {
             fo.close();
             listaFinale.add(f2);
         }
-        
-        mergeFiles(listaFinale, new File ("file.odt"));
+          //cancellazione parziali cli
+        try{
+                for (int i=0;i<lista.size();i++){
+    		File filex = new File("C:\\Users\\istri_000\\Desktop\\"+String.valueOf(i));
+    		if(filex.delete()){
+    			System.out.println(filex.getName() + " is deleted!");
+    		}else{
+    			System.out.println("Delete operation is failed.");
+    		}
+                
+                }
+
+    	}catch(Exception e){
+
+    		e.printStackTrace();
+
+    	}
+        mergeFiles(listaFinale, new File ("conf2.jpg"));
+        //cancellazione parziali server
         try{
                 for (int i=0;i<lista.size();i++){
     		File filex = new File(String.valueOf(i));
