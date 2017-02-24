@@ -8,15 +8,19 @@ package com.mycompany.miab_client;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Base64;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.apache.commons.io.FileUtils;
@@ -27,6 +31,9 @@ import org.json.simple.JSONObject;
  */
 
 public class MIAB_client {
+    
+   
+    
      public static List<File> splitFile(File f) throws IOException {
         int partCounter = 0;//I like to name parts from 001, 002, 003, ...
                             //you can change it to 0 if you want 000, 001, ...
@@ -49,8 +56,7 @@ public class MIAB_client {
             }
             return lista;
         }}
-     
-    public static void mergeFiles(List<File> files, File into)
+      public static void mergeFiles (List<File> files, File into)
         throws IOException {
     try (BufferedOutputStream mergingStream = new BufferedOutputStream(
             new FileOutputStream(into))) {
@@ -60,9 +66,9 @@ public class MIAB_client {
     }
 }
     
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException  {
         List <File>lista= new ArrayList<>();
-        File f= new File("C:\\Users\\istri_000\\Desktop\\conf2.jpg") ;
+        File f= new File("C:\\Users\\istri_000\\Desktop\\stampare.odt") ;
         lista=splitFile(f);
         
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -87,7 +93,8 @@ public class MIAB_client {
         System.out.println("UPLOAD "+o.toJSONString());
         int op;
         List<File> listaFinale= new ArrayList<>();
- 
+        Socket clientSocket= new Socket ("localhost", 7777);
+            DataOutputStream outToServer=new DataOutputStream(clientSocket.getOutputStream());
         for (int i=0; i<lista.size();i++){
             packet p=new packet ();
             
@@ -104,12 +111,29 @@ public class MIAB_client {
             JSONObject b=p.getContent();
           
             System.out.println("SEND"+i+b.toJSONString());
+            
             File f2 = new File(String.valueOf(i));
             FileOutputStream fo= new FileOutputStream (f2);
             fo.write(p.getBuffer());
             fo.close();
             listaFinale.add(f2);
+            try{
+        
+            //invio dati
+            outToServer.writeBytes(b.toJSONString());
+            System.out.println(b.toJSONString());
+            System.out.println("File Sent!");
+            //chiusura connessione
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("Image not found" + e);
+        } catch (IOException ioe) {
+            System.out.println("Exception while reading the Image " + ioe);
         }
+       
+        }
+        clientSocket.close();
+            
           //cancellazione parziali cli
         try{
                 for (int i=0;i<lista.size();i++){
@@ -127,24 +151,9 @@ public class MIAB_client {
     		e.printStackTrace();
 
     	}
-        mergeFiles(listaFinale, new File ("conf2.jpg"));
-        //cancellazione parziali server
-        try{
-                for (int i=0;i<lista.size();i++){
-    		File filex = new File(String.valueOf(i));
-    		if(filex.delete()){
-    			System.out.println(filex.getName() + " is deleted!");
-    		}else{
-    			System.out.println("Delete operation is failed.");
-    		}
-                
-                }
-
-    	}catch(Exception e){
-
-    		e.printStackTrace();
-
-    	}
+        
+        
+       
 
         /*packet end= new packet();
         end.setCommand('E');

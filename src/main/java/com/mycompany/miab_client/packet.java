@@ -91,13 +91,13 @@ public class packet implements packetInt{
             JSONObject obj= new JSONObject ();
    
             obj.put("command",this.command);
-            obj.put("opCode",this.opCode);
+            obj.put("opCode",String.valueOf(this.opCode));
             
             obj.put("bufferLenght",String.valueOf(this.bufferLenght));
             obj.put("buffer",Base64.getEncoder().encodeToString(this.buffer));
             
             
-            obj.put("checksum",this.checksum);
+            obj.put("checksum",String.valueOf(this.checksum));
             return obj;
     }
     
@@ -109,10 +109,10 @@ public class packet implements packetInt{
             JSONObject buffer= new JSONObject ();
             buffer.put("filename", filename);
             buffer.put("md5",x);
-            obj.put("bufferLenght",buffer.size());
+            obj.put("bufferLenght",String.valueOf(buffer.size()));
             obj.put("buffer", buffer);
             this.setChecksum(this);
-            obj.put("checksum",this.checksum);
+            obj.put("checksum",String.valueOf(this.checksum));
             return obj;
     }
     }

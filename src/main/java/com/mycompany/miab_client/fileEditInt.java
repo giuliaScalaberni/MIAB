@@ -5,22 +5,16 @@
  */
 package com.mycompany.miab_client;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Giulia Scalaberni
  */
-public class manipulateFile  {
-  
-     
-   
+public interface fileEditInt {
+    public  List<File> splitFile(File f)throws IOException;
+    public  void mergeFiles(List<File> files, File into) throws IOException;
+    
 }
