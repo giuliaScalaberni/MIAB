@@ -66,7 +66,7 @@ public class MIAB_client {
     }
 }
     
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException  {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, InterruptedException  {
         List <File>lista= new ArrayList<>();
         File f= new File("C:\\Users\\istri_000\\Desktop\\stampare.odt") ;
         lista=splitFile(f);
@@ -93,10 +93,11 @@ public class MIAB_client {
         System.out.println("UPLOAD "+o.toJSONString());
         int op;
         List<File> listaFinale= new ArrayList<>();
-        Socket clientSocket= new Socket ("localhost", 7777);
-            DataOutputStream outToServer=new DataOutputStream(clientSocket.getOutputStream());
+       
         for (int i=0; i<lista.size();i++){
-            packet p=new packet ();
+             packet p=new packet ();
+            Socket clientSocket= new Socket ("localhost", 7777);
+            DataOutputStream outToServer=new DataOutputStream(clientSocket.getOutputStream());
             
             p.setCommand("S");
             p.setOpcode(String.valueOf(i+1));
@@ -121,8 +122,9 @@ public class MIAB_client {
         
             //invio dati
             outToServer.writeBytes(b.toJSONString());
-            System.out.println(b.toJSONString());
+            System.out.println(outToServer);
             System.out.println("File Sent!");
+            
             //chiusura connessione
             
         } catch (FileNotFoundException e) {
@@ -132,7 +134,7 @@ public class MIAB_client {
         }
        
         }
-        clientSocket.close();
+        //clientSocket.close();
             
           //cancellazione parziali cli
         try{
