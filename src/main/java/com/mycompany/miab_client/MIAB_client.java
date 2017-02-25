@@ -7,6 +7,7 @@ package com.mycompany.miab_client;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -16,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -97,10 +99,10 @@ public class MIAB_client {
         System.out.println("UPLOAD "+o.toJSONString());
         int op;
         List<File> listaFinale= new ArrayList<>();
-       
+       Socket clientSocket= new Socket ("localhost", 7777);
         for (int i=0; i<lista.size();i++){
              packet p=new packet ();
-            Socket clientSocket= new Socket ("localhost", 7777);
+            
             DataOutputStream outToServer=new DataOutputStream(clientSocket.getOutputStream());
             InputStream is = clientSocket.getInputStream();
             p.setCommand("S");
@@ -120,32 +122,39 @@ public class MIAB_client {
             File f2 = new File(String.valueOf(i));
             FileOutputStream fo= new FileOutputStream (f2);
             fo.write(p.getBuffer());
-            fo.close();
-            listaFinale.add(f2);
+            fo.flush();
+            //fo.close();
+            
             try{
         
             //invio dati
             outToServer.writeBytes(b.toJSONString());
             System.out.println(outToServer);
             System.out.println("File Sent!");
-            byte[] bbb = new byte[1024];
+            InputStream is2 = clientSocket.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is2);
+            BufferedReader br = new BufferedReader(isr);
+            String message = br.readLine();
+            System.out.println("Message received from the server : " +message);
+            listaFinale.add(f2);
+            /*byte[] bbb = new byte[1024];
              while (true) {
          // Read next message.
             System.out.println(is.read(bbb));
          // handle message...
          // If you need to stop communication use 'break' to exit loop;
            break;
-      }
+      }*/
             //chiusura connessione
             
         } catch (FileNotFoundException e) {
-            System.out.println("Image not found" + e);
+            System.out.println("FILE NOT FOUND" + e);
         } catch (IOException ioe) {
-            System.out.println("Exception while reading the Image " + ioe);
+            System.out.println("Exception while reading the FILE " + ioe);
         }
        
         }
-        //clientSocket.close();
+      //  clientSocket.close();
             
           //cancellazione parziali cli
         try{
