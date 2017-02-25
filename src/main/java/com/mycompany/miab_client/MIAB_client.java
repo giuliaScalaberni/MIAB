@@ -63,24 +63,24 @@ public class MIAB_client{
      
      }
      
-    public static void uploadFile (String fileName) throws FileNotFoundException, IOException, NoSuchAlgorithmException{
+    public static void uploadFile (String fileName, String filePath) throws FileNotFoundException, IOException, NoSuchAlgorithmException{
     
+        //PREPARE FILE SELECTED
         List<File> listaFiles= new ArrayList<>();
-       
-        
-        filePrepare filePrepared=new filePrepare(fileName);
+        FilePrepare filePrepared=new FilePrepare(filePath);
         listaFiles=filePrepared.prepare();
         
         //CREATION UPLOAD PACKET
-        packet upload= new packet();
+        Packet upload= new Packet();
         JSONObject o=upload.setUpload(fileName, filePrepared.getMd5(), filePrepared.getTotPieces());
         System.out.println("UPLOAD "+o.toJSONString());
-        sender s= new sender ();
-        s.startSession(listaFiles);
+        Sender s= new Sender ();
+        
+        s.ackSession(listaFiles,s.uploadSession(o));
      
         try{
                 for (int i=0;i<listaFiles.size();i++){
-    		File filex = new File(fileName+String.valueOf(i));
+    		File filex = new File(filePath+String.valueOf(i));
     		if(filex.delete()){
     			System.out.println(filex.getName() + " is deleted!");
     		}else{
@@ -112,7 +112,7 @@ public class MIAB_client{
                 String filename=choo.fc.getName();
                 
         
-        /*packet end= new packet();
+        /*Packet end= new Packet();
         end.setCommand('E');
         end.setOpcode(1);
         end.setChecksum(end);

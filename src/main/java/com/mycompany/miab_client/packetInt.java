@@ -19,7 +19,7 @@ public interface packetInt {
     public void setLen_buffer(byte[] buffer);
     public void setBuffer(byte[] buffer);
     public byte[] getBuffer();
-    public void setChecksum(packet p);
+    public void setChecksum(Packet p);
     public JSONObject getContent();
     public JSONObject setUpload(String filename,String x, int nTot);
 }

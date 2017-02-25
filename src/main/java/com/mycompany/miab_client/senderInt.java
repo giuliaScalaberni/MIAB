@@ -6,13 +6,16 @@
 package com.mycompany.miab_client;
 
 import java.io.File;
+import java.net.Socket;
 import java.util.List;
+import org.json.simple.JSONObject;
 
 /**
  *
  * @author Giulia Scalaberni
  */
 public interface senderInt {
-    public void startSession(List<File> listaFiles);
+    public void ackSession(List<File> listaFiles,Socket clientSocket);
+    public Socket uploadSession(JSONObject o);
     
 }

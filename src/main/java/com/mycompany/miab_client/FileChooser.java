@@ -19,8 +19,8 @@ import javax.swing.filechooser.*;
  *   images/Open16.gif
  *   images/Save16.gif
  */
-public class FileChooser extends JPanel
-                             implements ActionListener {
+public class FileChooser extends JPanel implements ActionListener {
+    
     static private final String newline = "\n";
     JButton openButton, startButton;
     JTextArea log;
@@ -29,8 +29,6 @@ public class FileChooser extends JPanel
     public FileChooser() {
         super(new BorderLayout());
  
-        //Create the log first, because the action listeners
-        //need to refer to it.
         log = new JTextArea(5,20);
         log.setMargin(new Insets(5,5,5,5));
         log.setEditable(false);
@@ -38,69 +36,46 @@ public class FileChooser extends JPanel
  
         //Create a file chooser
         fc = new JFileChooser();
- 
-        //Uncomment one of the following lines to try a different
-        //file selection mode.  The first allows just directories
-        //to be selected (and, at least in the Java look and feel,
-        //shown).  The second allows both files and directories
-        //to be selected.  If you leave these lines commented out,
-        //then the default mode (FILES_ONLY) will be used.
-        //
-        //fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        //fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
- 
-        //Create the open button.  We use the image from the JLF
-        //Graphics Repository (but we extracted it from the jar).
         openButton = new JButton("Open a File...");
         openButton.addActionListener(this);
- 
         startButton= new JButton("Start upload...");
         startButton.addActionListener(this);
-        //Create the save button.  We use the image from the JLF
-        //Graphics Repository (but we extracted it from the jar).
-        /*saveButton = new JButton("Save a File...",
-                                 createImageIcon("images/Save16.gif"));
-        saveButton.addActionListener(this);*/
- 
-        //For layout purposes, put the buttons in a separate panel
-        JPanel buttonPanel = new JPanel(); //use FlowLayout
+        JPanel buttonPanel = new JPanel(); 
         buttonPanel.add(openButton);
         buttonPanel.add(startButton);
         startButton.setVisible(false);
- 
-        //Add the buttons and the log to this panel.
         add(buttonPanel, BorderLayout.PAGE_START);
         add(logScrollPane, BorderLayout.CENTER);
     }
  
     public void actionPerformed(ActionEvent e) {
  
-        //Handle open button action.
         if (e.getSource() == openButton) {
             int returnVal = fc.showOpenDialog(FileChooser.this);
  
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-               
-                //This is where a real application would open the file.
                 log.setText("File Selected:" + file.getName() );
-            } else {
-                log.append("Open command cancelled by user." + newline);
+                startButton.setVisible(true);
+            } 
+            else {
+                log.setText("Open command cancelled by user." + newline);
+                startButton.setVisible(false);
             }
             log.setCaretPosition(log.getDocument().getLength());
-            startButton.setVisible(true);
-        //Handle save button action.
-        }else if (e.getSource() == startButton) {
-                File file=fc.getSelectedFile();
-                
-                try {
-                    MIAB_client.uploadFile(file.getAbsolutePath());
-                    
-                } catch (IOException ex) {
-                    Logger.getLogger(FileChooser.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(FileChooser.class.getName()).log(Level.SEVERE, null, ex);
-                }
+           
+        }
+        else if (e.getSource() == startButton) {
+            File file=fc.getSelectedFile();
+            try {
+                MIAB_client.uploadFile(file.getName(), file.getAbsolutePath());
+            } 
+            catch (IOException ex) {
+                Logger.getLogger(FileChooser.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+            catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(FileChooser.class.getName()).log(Level.SEVERE, null, ex);
+            }
                
         
     }}

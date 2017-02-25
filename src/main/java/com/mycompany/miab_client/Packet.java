@@ -18,20 +18,21 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
  *
  * @author Giulia Scalaberni
  */
-public class packet implements packetInt{
+public class Packet implements packetInt{
     private String command;
     private String opCode;
     private int bufferLenght;
     private byte [] buffer;
     private byte checksum;
 
-    public packet() {
+    public Packet() {
         this.command="";
         this.opCode="";
         this.checksum=0;
@@ -39,7 +40,7 @@ public class packet implements packetInt{
         this.opCode="";
     }
 
-    public packet(String command, String opcode,  byte[] buffer, byte checksum) {
+    public Packet(String command, String opcode,  byte[] buffer, byte checksum) {
         this.command = command;
         this.opCode = opcode;
         this.bufferLenght=buffer.length;
@@ -67,7 +68,7 @@ public class packet implements packetInt{
         this.command = command;
     }
 
-    public void setChecksum(packet p) {
+    public void setChecksum(Packet p) {
         String  message="";
         message+=p.command;
         message+=p.opCode;
@@ -106,9 +107,16 @@ public class packet implements packetInt{
             JSONObject obj= new JSONObject ();
             obj.put("command","U");
             obj.put("opCode",nTot);
-            JSONObject buffer= new JSONObject ();
-            buffer.put("filename", filename);
-            buffer.put("md5",x);
+            JSONArray buffer= new JSONArray ();
+            JSONObject objName= new JSONObject ();
+            JSONObject objMD5= new JSONObject ();
+            objName.put("filename", filename);
+            objMD5.put("md5",x);
+            buffer.add(objName);
+            buffer.add(objMD5);
+            
+            obj.put("buffer", buffer);
+            
             obj.put("bufferLenght",String.valueOf(buffer.size()));
             obj.put("buffer", buffer);
             this.setChecksum(this);

@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author Giulia Scalaberni
  */
-public class manipulateFile  {
+public class ManipulateFile  {
   
      
    

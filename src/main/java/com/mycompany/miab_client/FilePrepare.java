@@ -19,12 +19,12 @@ import org.json.simple.JSONObject;
  *
  * @author Giulia Scalaberni
  */
-public class filePrepare {
+public class FilePrepare {
     private String fileName;
     private String md5;
     private int totPieces;
     
-    public filePrepare(String name){
+    public FilePrepare(String name){
             this.fileName=name;
             this.md5="";
             this.totPieces=0;
