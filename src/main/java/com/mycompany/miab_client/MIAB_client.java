@@ -74,6 +74,7 @@ public class MIAB_client {
     public static void upload (String fileName) throws FileNotFoundException, IOException, NoSuchAlgorithmException{
     
         List <File>lista= new ArrayList<>();
+        System.out.println(fileName);
         File f= new File(fileName) ;
         lista=splitFile(f);
         
@@ -104,7 +105,6 @@ public class MIAB_client {
              packet p=new packet ();
             
             DataOutputStream outToServer=new DataOutputStream(clientSocket.getOutputStream());
-            InputStream is = clientSocket.getInputStream();
             p.setCommand("S");
             p.setOpcode(String.valueOf(i+1));
             //Base64.getEncoder().encodeToString();
@@ -128,7 +128,7 @@ public class MIAB_client {
             try{
         
             //invio dati
-            outToServer.writeBytes(b.toJSONString());
+            outToServer.writeBytes(b.toJSONString()+"\n");
             System.out.println(outToServer);
             System.out.println("File Sent!");
             InputStream is2 = clientSocket.getInputStream();
@@ -137,6 +137,9 @@ public class MIAB_client {
             String message = br.readLine();
             System.out.println("Message received from the server : " +message);
             listaFinale.add(f2);
+            outToServer.flush();
+            
+            
             /*byte[] bbb = new byte[1024];
              while (true) {
          // Read next message.

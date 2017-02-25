@@ -94,6 +94,7 @@ public class FileChooserDemo extends JPanel
                 
                 try {
                     MIAB_client.upload(file.getAbsolutePath());
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(FileChooserDemo.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NoSuchAlgorithmException ex) {
