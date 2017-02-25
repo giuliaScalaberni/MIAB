@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Base64;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 /**
@@ -48,7 +51,7 @@ public class MIAB_client {
             int tmp = 0;
             while ((tmp = bis.read(buffer)) > 0) {
                 //write each chunk of data into separate file with different number in name
-                File newFile = new File(f.getParent(), String.valueOf(partCounter++));
+                File newFile = new File(f.getParent(), f.getName()+String.valueOf(partCounter++));
                 try (FileOutputStream out = new FileOutputStream(newFile)) {
                     out.write(buffer, 0, tmp);//tmp is chunk size
                     lista.add(newFile);
@@ -64,11 +67,12 @@ public class MIAB_client {
             Files.copy(f.toPath(), mergingStream);
         }
     }
-}
+      }
     
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, InterruptedException  {
+    public static void upload (String fileName) throws FileNotFoundException, IOException, NoSuchAlgorithmException{
+    
         List <File>lista= new ArrayList<>();
-        File f= new File("C:\\Users\\istri_000\\Desktop\\stampare.odt") ;
+        File f= new File(fileName) ;
         lista=splitFile(f);
         
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -98,7 +102,7 @@ public class MIAB_client {
              packet p=new packet ();
             Socket clientSocket= new Socket ("localhost", 7777);
             DataOutputStream outToServer=new DataOutputStream(clientSocket.getOutputStream());
-            
+            InputStream is = clientSocket.getInputStream();
             p.setCommand("S");
             p.setOpcode(String.valueOf(i+1));
             //Base64.getEncoder().encodeToString();
@@ -124,7 +128,14 @@ public class MIAB_client {
             outToServer.writeBytes(b.toJSONString());
             System.out.println(outToServer);
             System.out.println("File Sent!");
-            
+            byte[] bbb = new byte[1024];
+             while (true) {
+         // Read next message.
+            System.out.println(is.read(bbb));
+         // handle message...
+         // If you need to stop communication use 'break' to exit loop;
+           break;
+      }
             //chiusura connessione
             
         } catch (FileNotFoundException e) {
@@ -139,7 +150,7 @@ public class MIAB_client {
           //cancellazione parziali cli
         try{
                 for (int i=0;i<lista.size();i++){
-    		File filex = new File("C:\\Users\\istri_000\\Desktop\\"+String.valueOf(i));
+    		File filex = new File(fileName+String.valueOf(i));
     		if(filex.delete()){
     			System.out.println(filex.getName() + " is deleted!");
     		}else{
@@ -157,6 +168,18 @@ public class MIAB_client {
         
        
 
+    }
+
+      
+    
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, InterruptedException  {
+       
+                FileChooserDemo choo=new FileChooserDemo();
+                //Turn off metal's use of bold fonts
+                UIManager.put("swing.boldMetal", Boolean.FALSE); 
+                choo.createAndShowGUI();
+                String filename=choo.fc.getName();
+        
         /*packet end= new packet();
         end.setCommand('E');
         end.setOpcode(1);
