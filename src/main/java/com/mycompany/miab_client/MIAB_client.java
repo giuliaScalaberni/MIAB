@@ -122,22 +122,26 @@ public class MIAB_client {
             File f2 = new File(String.valueOf(i));
             FileOutputStream fo= new FileOutputStream (f2);
             fo.write(p.getBuffer());
-            fo.flush();
+            //fo.flush();
             //fo.close();
             
             try{
         
             //invio dati
             outToServer.writeBytes(b.toJSONString()+"\n");
+            outToServer.flush();
             System.out.println(outToServer);
             System.out.println("File Sent!");
+              listaFinale.add(f2);
+              //outToServer.close();
+            System.out.println(listaFinale.size());
             InputStream is2 = clientSocket.getInputStream();
             InputStreamReader isr = new InputStreamReader(is2);
             BufferedReader br = new BufferedReader(isr);
             String message = br.readLine();
             System.out.println("Message received from the server : " +message);
-            listaFinale.add(f2);
-            outToServer.flush();
+          
+            //outToServer.flush();
             
             
             /*byte[] bbb = new byte[1024];
