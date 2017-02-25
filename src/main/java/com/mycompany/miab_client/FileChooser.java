@@ -15,18 +15,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.*;
  
 /*
- * FileChooserDemo.java uses these files:
+ * FileChooser.java uses these files:
  *   images/Open16.gif
  *   images/Save16.gif
  */
-public class FileChooserDemo extends JPanel
+public class FileChooser extends JPanel
                              implements ActionListener {
     static private final String newline = "\n";
     JButton openButton, startButton;
     JTextArea log;
     JFileChooser fc;
  
-    public FileChooserDemo() {
+    public FileChooser() {
         super(new BorderLayout());
  
         //Create the log first, because the action listeners
@@ -77,12 +77,13 @@ public class FileChooserDemo extends JPanel
  
         //Handle open button action.
         if (e.getSource() == openButton) {
-            int returnVal = fc.showOpenDialog(FileChooserDemo.this);
+            int returnVal = fc.showOpenDialog(FileChooser.this);
  
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
+               
                 //This is where a real application would open the file.
-                log.append("File Selected:" + file.getName() );
+                log.setText("File Selected:" + file.getName() );
             } else {
                 log.append("Open command cancelled by user." + newline);
             }
@@ -93,12 +94,12 @@ public class FileChooserDemo extends JPanel
                 File file=fc.getSelectedFile();
                 
                 try {
-                    MIAB_client.upload(file.getAbsolutePath());
+                    MIAB_client.uploadFile(file.getAbsolutePath());
                     
                 } catch (IOException ex) {
-                    Logger.getLogger(FileChooserDemo.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(FileChooser.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(FileChooserDemo.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(FileChooser.class.getName()).log(Level.SEVERE, null, ex);
                 }
                
         
@@ -113,11 +114,11 @@ public class FileChooserDemo extends JPanel
      */
     public void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("FileChooserDemo");
+        JFrame frame = new JFrame("FileChooser");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  
         //Add content to the window.
-        frame.add(new FileChooserDemo());
+        frame.add(new FileChooser());
  
         //Display the window.
         frame.pack();
