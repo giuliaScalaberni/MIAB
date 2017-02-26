@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -74,7 +75,6 @@ public class Packet implements IntPacket{
         message+=String.valueOf(p.opCode);
         message+=String.valueOf(p.bufferLenght);
         String utf = Base64.getEncoder().encodeToString(p.buffer);
-        System.out.println("BUFFER"+utf);
         message+=utf;
         int chksm=0;
         for ( int i=0 ; i < message.length()-1 ; i++ )
@@ -82,9 +82,7 @@ public class Packet implements IntPacket{
             chksm +=(message.charAt(i)^message.charAt(i+1));
         }
         this.checksum = (byte)chksm;
-        
-            System.out.println("MESSAGE"+message);     
-            
+          
     }
     
     public void setChkUpload(Packet p) {
@@ -93,8 +91,11 @@ public class Packet implements IntPacket{
         message+=p.command;
         message+=String.valueOf(p.opCode);
         message+=String.valueOf(p.bufferLenght);
-        String utf = java.util.Arrays.toString(p.buffer);
-        message+=utf;
+        
+        System.out.println();
+        //String utf = Base64.getEncoder().encodeToString(p.buffer);
+        //System.out.println("UTF "+utf);
+        //message+=utf;
         int chksm=0;
         for ( int i=0 ; i < message.length()-1 ; i++ )
         {
@@ -146,6 +147,11 @@ public class Packet implements IntPacket{
             obj.put("bufferLenght",String.valueOf(buffer.size()));
             obj.put("buffer", buffer);
             
+            
+            String forCHK=filename+x;
+            
+            this.buffer=forCHK.getBytes();
+            System.out.println("buffer up"+java.util.Arrays.toString(this.buffer));
             
             this.setChkUpload(this);
             obj.put("checksum",String.valueOf(this.checksum));
