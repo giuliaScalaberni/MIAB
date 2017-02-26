@@ -22,4 +22,5 @@ public interface IntPacket {
     public void setChecksum(Packet p);
     public JSONObject getContent();
     public JSONObject setUpload(String filename,String x, int nTot);
+    //public void setChecksumUpload(Packet p);
 }
