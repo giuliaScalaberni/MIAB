@@ -67,7 +67,7 @@ public class Sender implements IntServer{
                 //CREATE THE SEND PACKET
                 Packet p=new Packet ();
                 p.setCommand("S");
-                p.setOpcode(String.valueOf(i+1));
+                p.setOpcode(i+1);
                 p.setBuffer(bytesArray);
                 p.setLen_buffer(p.getBuffer());
                 p.setChecksum(p);

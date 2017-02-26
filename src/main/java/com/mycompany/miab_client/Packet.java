@@ -27,20 +27,19 @@ import org.json.simple.JSONObject;
  */
 public class Packet implements IntPacket{
     private String command;
-    private String opCode;
+    private int opCode;
     private int bufferLenght;
     private byte [] buffer;
     private byte checksum;
 
     public Packet() {
         this.command="";
-        this.opCode="";
+        this.opCode=0;
         this.checksum=0;
         this.bufferLenght=0;
-        this.opCode="";
     }
 
-    public Packet(String command, String opcode,  byte[] buffer, byte checksum) {
+    public Packet(String command, int opcode,  byte[] buffer, byte checksum) {
         this.command = command;
         this.opCode = opcode;
         this.bufferLenght=buffer.length;
@@ -72,20 +71,23 @@ public class Packet implements IntPacket{
         
             String  message="";
             message+=p.command;
-            message+=p.opCode;
+            message+=String.valueOf(p.opCode);
             message+=String.valueOf(p.bufferLenght);
-            message+=p.buffer;
+                
+            String utf = java.util.Arrays.toString(p.buffer);
+            message+=utf;
             int chksm=0;
             for ( int i=0 ; i < message.length()-1 ; i++ )
             {
                 chksm +=(message.charAt(i)^message.charAt(i+1));
             }
             this.checksum = (byte)chksm;
-         
+            
+            
     }
 
     
-    public void setOpcode(String opcode) {
+    public void setOpcode(int opcode) {
         this.opCode = opcode;
     }
     
@@ -108,7 +110,9 @@ public class Packet implements IntPacket{
     //scrittura dati nel JSON
             JSONObject obj= new JSONObject ();
             obj.put("command","U");
+            this.command="U";
             obj.put("opCode",nTot);
+            this.opCode=nTot;
             JSONArray buffer= new JSONArray ();
             JSONObject objName= new JSONObject ();
             JSONObject objMD5= new JSONObject ();

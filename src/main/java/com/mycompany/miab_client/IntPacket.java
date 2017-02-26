@@ -15,7 +15,7 @@ import org.json.simple.JSONObject;
  */
 public interface IntPacket {
     public void setCommand(String command);
-    public void setOpcode(String opcode);
+    public void setOpcode(int opcode);
     public void setLen_buffer(byte[] buffer);
     public void setBuffer(byte[] buffer);
     public byte[] getBuffer();
