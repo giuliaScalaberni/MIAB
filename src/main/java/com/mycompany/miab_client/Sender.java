@@ -88,6 +88,7 @@ public class Sender implements IntServer{
                 System.out.println("Message received from the server : " +message);
                 
             }  
+            //clientSocket.close();
                     
         } catch (FileNotFoundException e) {
             System.out.println("FILE NOT FOUND" + e);

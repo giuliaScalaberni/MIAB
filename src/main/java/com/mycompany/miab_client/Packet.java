@@ -92,7 +92,7 @@ public class Packet implements IntPacket{
         message+=String.valueOf(p.opCode);
         message+=String.valueOf(p.bufferLenght);
         String utf = Base64.getEncoder().encodeToString(p.buffer);
-        System.out.println("UTF "+utf);
+        
         message+=utf;
         int chksm=0;
         for ( int i=0 ; i < message.length()-1 ; i++ )
@@ -149,8 +149,6 @@ public class Packet implements IntPacket{
             String forCHK=filename+x;
             
             this.buffer=forCHK.getBytes();
-            
-            System.out.println("buffer up"+forCHK);
             
             this.setChkUpload(this);
             obj.put("checksum",String.valueOf(this.checksum));

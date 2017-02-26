@@ -81,11 +81,9 @@ public class MIAB_client{
         try{
                 for (int i=0;i<listaFiles.size();i++){
     		File filex = new File(filePath+String.valueOf(i));
-    		if(filex.delete()){
-    			System.out.println(filex.getName() + " is deleted!");
-    		}else{
-    			System.out.println("Delete operation is failed.");
-    		}
+    		
+                filex.delete();
+                    
                 
                 }
 
