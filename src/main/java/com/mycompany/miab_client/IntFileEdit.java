@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Giulia Scalaberni
  */
-public interface fileEditInt {
+public interface IntFileEdit {
     public  List<File> splitFile(File f)throws IOException;
     public  void mergeFiles(List<File> files, File into) throws IOException;
     

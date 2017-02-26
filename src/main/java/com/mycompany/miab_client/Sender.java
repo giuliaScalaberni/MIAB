@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
  *
  * @author Giulia Scalaberni
  */
-public class Sender implements senderInt{
+public class Sender implements IntServer{
     public Sender (){
     
     }

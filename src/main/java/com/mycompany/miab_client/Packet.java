@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
  *
  * @author Giulia Scalaberni
  */
-public class Packet implements packetInt{
+public class Packet implements IntPacket{
     private String command;
     private String opCode;
     private int bufferLenght;
@@ -114,8 +114,6 @@ public class Packet implements packetInt{
             objMD5.put("md5",x);
             buffer.add(objName);
             buffer.add(objMD5);
-            
-            obj.put("buffer", buffer);
             
             obj.put("bufferLenght",String.valueOf(buffer.size()));
             obj.put("buffer", buffer);

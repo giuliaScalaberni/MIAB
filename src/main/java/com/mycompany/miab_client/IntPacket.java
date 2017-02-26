@@ -13,7 +13,7 @@ import org.json.simple.JSONObject;
  *
  * @author Giulia Scalaberni
  */
-public interface packetInt {
+public interface IntPacket {
     public void setCommand(String command);
     public void setOpcode(String opcode);
     public void setLen_buffer(byte[] buffer);

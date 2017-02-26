@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
  *
  * @author Giulia Scalaberni
  */
-public interface senderInt {
+public interface IntServer {
     public void ackSession(List<File> listaFiles,Socket clientSocket);
     public Socket uploadSession(JSONObject o);
     
