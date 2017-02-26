@@ -69,17 +69,19 @@ public class Packet implements IntPacket{
     }
 
     public void setChecksum(Packet p) {
-        String  message="";
-        message+=p.command;
-        message+=p.opCode;
-        message+=p.bufferLenght;
-        message+=p.buffer;
-        int chksm=0;
-        for ( int i=0 ; i < message.length()-1 ; i++ ) 
-        { 
-         chksm +=(message.charAt(i)^message.charAt(i+1));
-        } 
-        this.checksum = (byte)chksm;
+        
+            String  message="";
+            message+=p.command;
+            message+=p.opCode;
+            message+=String.valueOf(p.bufferLenght);
+            message+=p.buffer;
+            int chksm=0;
+            for ( int i=0 ; i < message.length()-1 ; i++ )
+            {
+                chksm +=(message.charAt(i)^message.charAt(i+1));
+            }
+            this.checksum = (byte)chksm;
+         
     }
 
     
