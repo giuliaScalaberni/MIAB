@@ -69,19 +69,38 @@ public class Packet implements IntPacket{
 
     public void setChecksum(Packet p) {
         
-            String  message="";
-            message+=p.command;
-            message+=String.valueOf(p.opCode);
-            message+=String.valueOf(p.bufferLenght);
-                
-            String utf = java.util.Arrays.toString(p.buffer);
-            message+=utf;
-            int chksm=0;
-            for ( int i=0 ; i < message.length()-1 ; i++ )
-            {
-                chksm +=(message.charAt(i)^message.charAt(i+1));
-            }
-            this.checksum = (byte)chksm;
+        String  message="";
+        message+=p.command;
+        message+=String.valueOf(p.opCode);
+        message+=String.valueOf(p.bufferLenght);
+        String utf = Base64.getEncoder().encodeToString(p.buffer);
+        System.out.println("BUFFER"+utf);
+        message+=utf;
+        int chksm=0;
+        for ( int i=0 ; i < message.length()-1 ; i++ )
+        {
+            chksm +=(message.charAt(i)^message.charAt(i+1));
+        }
+        this.checksum = (byte)chksm;
+        
+            System.out.println("MESSAGE"+message);     
+            
+    }
+    
+    public void setChkUpload(Packet p) {
+        
+        String  message="";
+        message+=p.command;
+        message+=String.valueOf(p.opCode);
+        message+=String.valueOf(p.bufferLenght);
+        String utf = java.util.Arrays.toString(p.buffer);
+        message+=utf;
+        int chksm=0;
+        for ( int i=0 ; i < message.length()-1 ; i++ )
+        {
+            chksm +=(message.charAt(i)^message.charAt(i+1));
+        }
+        this.checksum = (byte)chksm;
             
             
     }
@@ -113,17 +132,22 @@ public class Packet implements IntPacket{
             this.command="U";
             obj.put("opCode",nTot);
             this.opCode=nTot;
+            
             JSONArray buffer= new JSONArray ();
+            
             JSONObject objName= new JSONObject ();
             JSONObject objMD5= new JSONObject ();
             objName.put("filename", filename);
             objMD5.put("md5",x);
+            
             buffer.add(objName);
             buffer.add(objMD5);
             
             obj.put("bufferLenght",String.valueOf(buffer.size()));
             obj.put("buffer", buffer);
-            this.setChecksum(this);
+            
+            
+            this.setChkUpload(this);
             obj.put("checksum",String.valueOf(this.checksum));
             return obj;
     }

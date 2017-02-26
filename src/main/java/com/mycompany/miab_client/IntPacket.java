@@ -20,6 +20,7 @@ public interface IntPacket {
     public void setBuffer(byte[] buffer);
     public byte[] getBuffer();
     public void setChecksum(Packet p);
+    public void setChkUpload(Packet p);
     public JSONObject getContent();
     public JSONObject setUpload(String filename,String x, int nTot);
     //public void setChecksumUpload(Packet p);
